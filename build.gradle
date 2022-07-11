@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'io.freefair.lombok' version '5.3.0'
+    id 'io.qameta.allure' version '2.9.6'
 }
 
 sourceCompatibility = 11
@@ -14,11 +16,23 @@ repositories {
     mavenCentral()
 }
 
+allure{
+    version = '2.18.1'
+
+    useJUnit5{
+        version = '2.18.1'
+    }
+}
+
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'com.codeborne:selenide:6.6.3'
+    implementation 'mysql:mysql-connector-java:8.0.29'
     implementation 'com.github.javafaker:javafaker:1.0.2'
+    implementation 'io.qameta.allure:allure-selenide:2.18.1'
 }
 
 test {
     useJUnitPlatform()
+    systemProperty 'selenide.headless', System.getProperty('selenide.headless')
 }
