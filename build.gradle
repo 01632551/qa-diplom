@@ -25,11 +25,12 @@ allure{
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
-    testImplementation 'com.codeborne:selenide:6.6.3'
-    implementation 'mysql:mysql-connector-java:8.0.29'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    testImplementation 'com.codeborne:selenide:6.7.2'
+    implementation 'mysql:mysql-connector-java:8.0.30'
     implementation 'com.github.javafaker:javafaker:1.0.2'
-    implementation 'io.qameta.allure:allure-selenide:2.18.1'
+    testImplementation 'io.qameta.allure:allure-selenide:2.19.0'
+    testImplementation 'commons-dbutils:commons-dbutils:1.7'
 }
 
 test {
