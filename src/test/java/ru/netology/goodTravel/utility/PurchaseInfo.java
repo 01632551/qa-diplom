@@ -52,7 +52,6 @@ public class PurchaseInfo {
         var statusSQL = "select status FROM payment_entity order by created desc limit 1;";
         var bankIdSQL = "select transaction_id FROM payment_entity order by created desc limit 1;";
         var creditIdSQL = "select payment_id FROM order_entity order by created desc limit 1;";
-        var deleteOrderData = "truncate order_entity";
         var runner = new QueryRunner();
 
         try (
@@ -60,7 +59,6 @@ public class PurchaseInfo {
                         "app",
                         "pass");
         ){
-            runner.update(conn, "delete FROM payment_entity");
             return new DataHelper.DBInfo(
                     runner.query(conn, statusSQL, new ScalarHandler<>()),
                     runner.query(conn, bankIdSQL, new ScalarHandler<>()),
@@ -80,9 +78,10 @@ public class PurchaseInfo {
                 "app",
                 "pass")
         ){
+            rn.update(conn, deleteOrderEntity);
             rn.update(conn, deleteCreditEntity);
             rn.update(conn, deletePaymentEntity);
-            rn.update(conn, deleteOrderEntity);
+
         }
     }
 }

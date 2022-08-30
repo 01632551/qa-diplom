@@ -3,6 +3,7 @@ package ru.netology.goodTravel.tests;
 import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Feature("Позитивные сценарии покупки тура")
 public class PurchasePositiveTest {
+
+    @BeforeAll
+    public static void prepareData(){
+        PurchaseInfo.deleteData();
+    }
 
     @BeforeEach
     public void setUp(){
