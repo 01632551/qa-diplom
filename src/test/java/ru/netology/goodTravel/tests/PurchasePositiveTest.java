@@ -134,7 +134,7 @@ public class PurchasePositiveTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"Парамонова Стефания", "Анна-Мария Ин", "Роман Сорокин-Жданкин", "Артём Летучий", "Дмитрий Лебедев", "Zhukov Stepan"})
+    @CsvSource(value = {"Парамонова Стефания", "Анна-Мария Ин", "Роман Сорокин-Жданкин", " Артём Летучий", "Дмитрий Лебедев ", "Zhukov Stepan"})
     public void shouldSuccessfullyBuyTourWithDifOwner(String owner) {
         var paymentPage = new PaymentPage();
         paymentPage.enterPurchaseForm(1);
