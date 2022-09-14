@@ -18,10 +18,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @UtilityClass
 public class PurchaseInfo {
-    private final String user = "app";
-    private final String pass = "pass";
-
-
 
     public static DataHelper.CardInfo generateInfo(String locale) {
         Faker faker = new Faker(new Locale(locale));
@@ -33,58 +29,55 @@ public class PurchaseInfo {
                         Integer.toString(ThreadLocalRandom.current().nextInt(100, 1000)));
     }
 
+    private final String user = "app";
+    private final String pass = "pass";
+
     @SneakyThrows
+    public static String getSQLReq(int index, String req) {
+        var run = new QueryRunner();
+
+        try (var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", user,
+                pass);
+        ) {
+            if (index == 0) {
+                run.update(conn, req);
+                return null;
+            } else {
+                return (String) run.query(conn, req, new ScalarHandler<>());
+            }
+        }
+    }
+
     public static DataHelper.DBInfo creditInfo() {
         var statusSQL = "select status FROM credit_request_entity order by created desc limit 1;";
         var bankIdSQL = "select bank_id FROM credit_request_entity order by created desc limit 1;";
         var creditIdSQL = "select credit_id FROM order_entity order by created desc limit 1;";
-        var runner = new QueryRunner();
-        try ( var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", user,
-                pass);
-        ){
-            return new DataHelper.DBInfo(
-                runner.query(conn, statusSQL, new ScalarHandler<>()),
-                runner.query(conn, bankIdSQL, new ScalarHandler<>()),
-                runner.query(conn, creditIdSQL, new ScalarHandler<>()));
 
-        }
+        return new DataHelper.DBInfo(
+                getSQLReq(1, statusSQL),
+                getSQLReq(1, bankIdSQL),
+                getSQLReq(1, creditIdSQL));
+
     }
 
-    @SneakyThrows
     public static DataHelper.DBInfo paymentInfo() {
         var statusSQL = "select status FROM payment_entity order by created desc limit 1;";
         var bankIdSQL = "select transaction_id FROM payment_entity order by created desc limit 1;";
         var creditIdSQL = "select payment_id FROM order_entity order by created desc limit 1;";
-        var runner = new QueryRunner();
 
-        try (
-                var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app",
-                        user,
-                        pass);
-        ) {
-            return new DataHelper.DBInfo(
-                    runner.query(conn, statusSQL, new ScalarHandler<>()),
-                    runner.query(conn, bankIdSQL, new ScalarHandler<>()),
-                    runner.query(conn, creditIdSQL, new ScalarHandler<>())
-            );
-        }
+        return new DataHelper.DBInfo(
+                getSQLReq(1, statusSQL),
+                getSQLReq(1, bankIdSQL),
+                getSQLReq(1, creditIdSQL));
     }
 
-    @SneakyThrows
     public static void deleteData() {
         var deleteCreditEntity = "truncate credit_request_entity";
         var deletePaymentEntity = "truncate payment_entity";
         var deleteOrderEntity = "truncate order_entity";
-        var rn = new QueryRunner();
-        try (var conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/app",
-                user,
-                pass)
-        ) {
-            rn.update(conn, deleteOrderEntity);
-            rn.update(conn, deleteCreditEntity);
-            rn.update(conn, deletePaymentEntity);
 
-        }
+        getSQLReq(0, deletePaymentEntity);
+        getSQLReq(0, deleteCreditEntity);
+        getSQLReq(0, deleteOrderEntity);
     }
 }
